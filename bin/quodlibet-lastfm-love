@@ -1,0 +1,93 @@
+#!/home/baerg/perl5/perlbrew/perls/perl-5.24.0/bin/perl
+
+use Modern::Perl;
+
+use Net::LastFM;
+
+my $api_key = '63996432f1ad1310067a9860b9ab6a64';
+my $api_secret = 'bd5895c6bddad5ebe68bf817c3a145f6';
+my $session_key = 'msqQP0L3XmeE57XrzCNCRGozakA593X6'; ## ajbaerg
+
+my $artist = `quodlibet --print-playing "<artist>"`;
+my $track = `quodlibet --print-playing "<title>"`;
+chop $artist;
+chop $track;
+say $artist;
+say $track;
+
+# use Desktop::Notify;
+use Data::Dumper;
+
+my $data;
+
+my $lastfm = Net::LastFM->new( 
+  api_key => $api_key,
+  api_secret => $api_secret,
+);
+
+# To get a session key
+# 1. $data = $lastfm->request( method => 'auth.gettoken' );
+# 2. say 'https://www.last.fm/api/auth?api_key=' . $api_key . '&token=' . $data->{token};
+# 3. use api key and token to authenticate app at https://www.last.fm/api/auth?api_key=xxxxx&token=xxxx
+# 4. $data = $lastfm->request_signed( method => 'auth.getSession', token => 'xxxxxx' );
+# 5. say Dumper($data);
+# 6. save session key in this file
+
+eval {
+  $data = $lastfm->request_signed(
+    method => 'track.love',
+    track => $track,
+    artist => $artist,
+    sk => $session_key,
+  );
+};
+if ($@) {
+  warn $@;
+  # Desktop::Notify->new->create(summary => q{j'aime}, body => 'An error occurred loving the track on last.fm', timeout => '2000')->show;
+}
+else {
+  say qq{loved $track by $artist on last.fm};
+  # Desktop::Notify->new->create(summary => q{j'aime}, body => qq{loved $track by $artist on last.fm} , timeout => '2000')->show;
+}
+
+sleep 10;
+
+#my $request = $lastfm->create_http_request_signed(
+#  method => 'track.love',
+#  track => $track,
+#  artist => $artist,
+#  sk => $session_key,
+#);
+
+#$request->method('POST');
+#my $ua = LWP::UserAgent->new;
+#my $response = $ua->request($request);
+#say $response->content;
+
+#use Desktop::Notify;
+#if ($response->content =~ /ok/) {
+#  Desktop::Notify->new->create(summary => q{j'aime}, body => qq{loved $track by $artist on last.fm} , timeout => '2000')->show;
+#} else { 
+#  Desktop::Notify->new->create(summary => q{j'aime}, body => $response->content, timeout => '2000')->show;
+#}
+
+
+my $file = `quodlibet --print-playing "<~filename>"`;
+my $ext = lc `quodlibet --print-playing "<~format>"`;
+chop $file;
+chop $ext;
+$ext = 'mp3' if $ext =~ /unknown/i;
+
+$file =~ s/\s/\\ /g;
+$track =~ s/\s/\\ /g;
+$file =~ s/'/\\'/g;
+$track =~ s/'/\\'/g;
+$file =~ s/\(/\\\(/g;
+$track =~ s/\(/\\\(/g;
+$file =~ s/\)/\\\)/g;
+$track =~ s/\)/\\\)/g;
+my $dest = "$track.$ext";
+
+#say "scp $file pullingshots.ca:\"/tmp/$track.$ext\"";
+#my $res = `scp $file pullingshots.ca:"/tmp/$dest"`;
+#$res = `ssh pullingshots.ca "mv /tmp/$dest /home/baerg/blog/audio/"`;

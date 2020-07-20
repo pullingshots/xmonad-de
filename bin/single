@@ -1,0 +1,14 @@
+#!/bin/bash
+
+xrandr --output HDMI-1 --off --output HDMI-2 --off --output eDP-1 --off
+xrandr --output eDP-1 --auto
+
+killall xmobar
+
+xmobar &
+
+killall trayer
+
+trayer --edge top --align right --width 10 --height 14 &
+
+DISPLAY=:0 feh --bg-fill /tmp/bg.jpg

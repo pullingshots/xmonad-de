@@ -1,0 +1,9 @@
+#!/usr/bin/env perl
+
+my $brightness = `cat /sys/class/backlight/intel_backlight/actual_brightness`;
+
+$brightness -= 500;
+$brightness = 1 if $brightness < 1;
+
+my $junk = `echo $brightness > /sys/class/backlight/intel_backlight/brightness`;
+

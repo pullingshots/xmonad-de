@@ -1,0 +1,13 @@
+#!/bin/bash
+
+xrandr --output eDP-1 --auto --output HDMI-2 --auto --above eDP-1 --output HDMI-1 --auto --left-of HDMI-2 --rotate left
+
+killall xmobar
+
+xmobar -x 1 & xmobar $HOME/.xmobarrc-secondary &
+
+killall trayer
+
+trayer --edge top --align right --width 10 --height 14 --monitor 1 &
+
+DISPLAY=:0 feh --bg-fill /tmp/bg.jpg

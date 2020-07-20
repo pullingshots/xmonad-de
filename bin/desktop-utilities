@@ -1,0 +1,26 @@
+#!/bin/bash
+
+/home/baerg/bin/bg
+
+#gnome-settings-daemon &
+killall syndaemon
+#syndaemon -k -t -d -i 2
+syndaemon -d -K -i 2
+
+killall redshift-gtk
+redshift-gtk -l 51.2:-114.1 &
+
+#nm-applet &
+#killall wicd-client
+#wicd-client &
+
+#blueman-manager &
+
+#xfce4-power-manager --no-daemon &
+
+#syncthing &
+
+#dropbox start
+
+#killall workrave
+#workrave &

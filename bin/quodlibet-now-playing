@@ -1,0 +1,29 @@
+#!/home/baerg/perl5/perlbrew/perls/perl-5.24.0/bin/perl
+
+use Modern::Perl;
+
+my $status = `quodlibet --status`;
+
+if ($status =~ /^playing/) {
+
+  my $artist = `quodlibet --print-playing "<artist>"`;
+  my $album = `quodlibet --print-playing "<album>"`;
+  my $track = `quodlibet --print-playing "<title>"`;
+  chop $artist;
+  chop $album;
+  chop $track;
+  say $artist;
+  say $album;
+  say $track;
+
+  my $cover = `convert ~/.quodlibet/current.cover -resize 800 /tmp/quodlibet-now-playing.png`;
+  my $cover = `convert -size 400x100 xc:none -fill grey -gravity NorthWest -draw "text 10,10 '$artist\n$album'" -gravity SouthEast -draw "text 5,15 '$track'"  miff:- | composite -tile - /tmp/quodlibet-now-playing.png /tmp/quodlibet-now-playing.png`;
+  $cover = `DISPLAY=:0 feh --bg-max /tmp/quodlibet-now-playing.png`;
+
+  #use Desktop::Notify;
+
+  #Desktop::Notify->new->create(summary => q{Now Playing}, body => qq{$track from $album by $artist} , timeout => '2000')->show;
+
+}
+
+

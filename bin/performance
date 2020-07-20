@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu5/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu7/cpufreq/scaling_governor
+
+#echo "T0" > /proc/acpi/processor/CPU0/throttling
+#echo "T0" > /proc/acpi/processor/CPU1/throttling
+
+echo 3200000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo 3200000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+echo 3200000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+echo 3200000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+echo 3200000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+echo 3200000 > /sys/devices/system/cpu/cpu5/cpufreq/scaling_max_freq
+echo 3200000 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_max_freq
+echo 3200000 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq
+
+iwconfig wlan2 power off
+
+echo 5273 | sudo tee /sys/class/backlight/intel_backlight/brightness
