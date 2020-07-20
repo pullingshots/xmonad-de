@@ -9,8 +9,6 @@ import XMonad.Hooks.SetWMName
 
 import XMonad.Hooks.DynamicLog -- for getting dynamic info into xmobar
 
-import XMonad.Hooks.ManageHelpers -- needed for the myManageHook statement
-
 import XMonad.Layout.GridVariants
 
 import Graphics.X11.ExtraTypes.XF86
@@ -60,23 +58,12 @@ myKeys (XConfig {modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_x), spawn "/home/baerg/bin/Xperia-umount")
     ]
 
--- not entirely sure what all this does, but it does prevent trayer from being treated as a regular window
-myManageHook = composeAll
-    [ classNotRole ("Psi", "roster") --> doFloat
-    ] where
- 
-        classNotRole :: (String, String) -> Query Bool
-        classNotRole (c,r) = className =? c <&&> role /=? r
-
-        role = stringProperty "WM_WINDOW_ROLE"
-
 main = xmonad $ docks $ ewmh defaultConfig
   { modMask = mod4Mask
   , terminal = "xfce4-terminal"
   , keys     = \c -> myKeys c `M.union` keys desktopConfig c
   , logHook = dynamicLogString sjanssenPP >>= xmonadPropLog -- current desktop/window info in xmobar
   , layoutHook = avoidStruts(myLayout)  -- windows don't overlap xmobar
-  , manageHook = myManageHook <+> manageHook desktopConfig -- float certain windows (like trayer)
   , startupHook = do
     startupHook desktopConfig
     spawn "single"
