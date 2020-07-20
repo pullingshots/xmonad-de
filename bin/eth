@@ -1,0 +1,14 @@
+#!/bin/bash
+
+sudo ifconfig wlan2 down
+sudo ifconfig wlan3 down
+sudo ifconfig eth0 up
+
+    sudo service wicd stop
+    sudo dhclient -r eth0
+    sudo killall dhclient
+    sudo killall wpa_supplicant
+    sudo dhclient eth0
+    sudo ifconfig eth0
+    sudo systemd-resolve --status
+    ping -f -i 0.2 google.ca

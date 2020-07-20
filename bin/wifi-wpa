@@ -1,0 +1,35 @@
+#!/bin/bash
+
+WLAN=wlp0s20f3
+ETH=eth0
+
+sudo ip link set $ETH down
+sudo ip link set $WLAN down
+#sudo rmmod rtl8723ae
+sleep 1
+#sudo modprobe rtl8723ae
+sudo ip link set $WLAN up
+
+if [ -z $1 ]
+  then
+    sudo killall wpa_supplicant
+    sleep 5
+    sudo iwlist $WLAN scan | grep -E "ESSID|Signal|WPA"
+fi
+if [ $1 ]
+  then
+    sudo service network-manager stop
+    #sudo service wicd stop
+    sudo dhclient -r $WLAN
+    sudo killall dhclient
+    sudo killall wpa_supplicant
+    sleep 2
+    sudo iwconfig $WLAN essid "$1"
+    sudo wpa_supplicant -B -i $WLAN -c /etc/wpa_supplicant/wpa_supplicant.conf
+    sleep 5
+    sudo iwconfig $WLAN
+    sudo dhclient $WLAN
+    sudo ip addr
+    sudo systemd-resolve --status
+    ping -f -i 0.2 google.ca
+fi
