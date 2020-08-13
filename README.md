@@ -93,7 +93,7 @@ Play/Pause Fn key will play/pause quodlibet
 
 ## Common settings to change
 
-Edit `xmonad/xmonad.hs` to change the terminal emulator or file manager. I prefer the Konsole and Dolphin. `sudo apt install konsole dolphin breeze-icon-theme`
+Edit `xmonad/xmonad.hs` to change the terminal emulator or file manager. I prefer Konsole and Dolphin. `sudo apt install konsole dolphin breeze-icon-theme`
 
 Try Konsole with the Solarized color scheme and Terminus font. `sudo apt install xfonts-terminus`
 
