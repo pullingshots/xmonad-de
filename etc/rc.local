@@ -1,0 +1,5 @@
+#!/bin/bash
+
+chmod a+rw /sys/class/backlight/intel_backlight/brightness
+
+exit 0
