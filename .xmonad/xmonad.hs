@@ -53,7 +53,7 @@ myKeys (XConfig {modMask = modm}) = M.fromList $
     , ((noModMask, xF86XK_MonBrightnessDown), spawn "/home/baerg/bin/brightness-down")
     , ((mod1Mask, xK_Tab), windows W.focusDown)
     , ((mod1Mask .|. shiftMask, xK_Tab), windows W.focusUp)
-    , ((modm, xK_s), spawn "shutter -s")
+    , ((modm, xK_s), spawn "xfce4-screenshooter -c -d 5 -m -r -s /tmp")
     , ((modm, xK_x), spawn "/home/baerg/bin/Xperia-mount")
     , ((modm .|. shiftMask, xK_x), spawn "/home/baerg/bin/Xperia-umount")
     ]
