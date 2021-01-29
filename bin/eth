@@ -1,14 +1,17 @@
 #!/bin/bash
 
-sudo ifconfig wlan2 down
-sudo ifconfig wlan3 down
-sudo ifconfig eth0 up
+WLAN=wlp0s20f3
+ETH=enx00249b649e69
 
-    sudo service wicd stop
-    sudo dhclient -r eth0
+sudo ip link set $ETH down
+sudo ip link set $WLAN down
+
+    sudo service network-manager stop
+    #sudo service wicd stop
+    sudo dhclient -r $ETH
     sudo killall dhclient
     sudo killall wpa_supplicant
-    sudo dhclient eth0
-    sudo ifconfig eth0
+    sudo dhclient $ETH
+    sudo ifconfig $ETH
     sudo systemd-resolve --status
     ping -f -i 0.2 google.ca
