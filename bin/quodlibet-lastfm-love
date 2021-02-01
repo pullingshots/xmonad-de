@@ -4,9 +4,9 @@ use Modern::Perl;
 
 use Net::LastFM;
 
-my $api_key = '63996432f1ad1310067a9860b9ab6a64';
-my $api_secret = 'bd5895c6bddad5ebe68bf817c3a145f6';
-my $session_key = 'msqQP0L3XmeE57XrzCNCRGozakA593X6'; ## ajbaerg
+my $api_key = 'xxxxx'; ## get an api key from last.fm/api
+my $api_secret = 'xxxxx';
+my $session_key = 'xxxxxx'; ## see instructions below
 
 my $artist = `quodlibet --print-playing "<artist>"`;
 my $track = `quodlibet --print-playing "<title>"`;
