@@ -13,6 +13,8 @@ import XMonad.Hooks.DynamicLog -- for getting dynamic info into xmobar
 
 import XMonad.Layout.GridVariants
 
+import XMonad.Actions.CopyWindow
+
 import Graphics.X11.ExtraTypes.XF86
 
 import Control.Exception
@@ -35,6 +37,9 @@ myLayout = tiled ||| Mirror tiled ||| Full ||| Grid (16/10)
 myKeys (XConfig {modMask = modm}) = M.fromList $
     [ ((modm, xK_p), spawn "synapse")
     , ((modm, xK_z), warpToWindow (0) (0)) -- move mouse to currently focused window
+    , ((modm, xK_a ), windows copyToAll) -- @@ Make focused window always visible
+    , ((modm .|. shiftMask, xK_a ),  killAllOtherCopies) -- @@ Toggle window state back
+    , ((modm .|. shiftMask, xK_l), spawn "xtrlock -b")
     , ((modm .|. shiftMask, xK_w), spawn "xterm -e 'wifi-wpa 1'")
     , ((modm .|. shiftMask, xK_e), spawn "xterm -e 'eth'")
     , ((modm, xK_Home), spawn "thunar")
