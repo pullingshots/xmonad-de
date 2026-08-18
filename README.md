@@ -12,18 +12,19 @@ This repo is meant to turn a minimal Debian based install into a fast, keyboard-
 - launch browsers with disposable/profile-based setups
 - show music info from Quod Libet
 - take screenshots
-- mount phones and encrypted USB drives
+- mount encrypted USB drives
 - generally make your laptop feel like *your* laptop
 
 ## Quick start 🚀
 
+```bash
 sudo apt install \
   xmonad xmobar trayer synapse quodlibet redshift-gtk \
   vorbis-tools imagemagick feh maim xclip \
   xterm thunar konsole i3lock \
-  network-manager wireless-tools wpasupplicant \
-  sshfs cryptsetup curl jq bc gping \
+  cryptsetup curl jq bc gping \
   perl
+```
 
 - `xmonad` — the window manager
 - `xmobar` — the top status bar
@@ -33,10 +34,8 @@ sudo apt install \
 - `redshift-gtk` — warmer screen colors at night
 - `feh` + `imagemagick` — wallpaper tools
 - `maim` + `xclip` — screenshots to file and clipboard
-- `network-manager`, `nmcli`, `wpasupplicant` — network helpers
-- `sshfs` — mount phones or remote filesystems
 - `cryptsetup` — encrypted USB helper
-- `jq`, `curl`, `bc`, `gping` — used by the smarter display/network scripts
+- `jq`, `curl`, `bc`, `gping` — used by the display/network scripts
 
 ## Installation 🧱
 
