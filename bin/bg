@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMG=`find /extra/Photos -iname "*jpg" -type f | shuf -n 1`
+IMG=`find $HOME/Wallpaper -iname "*png" -type f | shuf -n 1`
 
 convert "$IMG" -auto-orient /tmp/bg.jpg
 

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+FILE="/tmp/screenshot_$(date +%Y%m%d_%H%M%S).png" && maim -d 5 -s "$FILE" && xclip -selection clipboard -t image/png -i "$FILE" && feh "$FILE"

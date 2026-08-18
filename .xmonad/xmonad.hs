@@ -39,41 +39,49 @@ myKeys (XConfig {modMask = modm}) = M.fromList $
     , ((modm, xK_z), warpToWindow (0) (0)) -- move mouse to currently focused window
     , ((modm, xK_a ), windows copyToAll) -- @@ Make focused window always visible
     , ((modm .|. shiftMask, xK_a ),  killAllOtherCopies) -- @@ Toggle window state back
-    , ((modm .|. shiftMask, xK_l), spawn "xtrlock -b")
-    , ((modm .|. shiftMask, xK_w), spawn "xterm -e 'wifi-wpa 1'")
-    , ((modm .|. shiftMask, xK_e), spawn "xterm -e 'eth'")
+    , ((modm .|. shiftMask, xK_l), spawn "i3lock -i \"$(find ~/Wallpaper -type f \\( -name \"*.png\" -o -name \"*.jpg\" \\) | shuf -n1)\" --scale")
+    , ((modm .|. shiftMask, xK_w), spawn "xterm -e 'sudo ~/bin/wifi-mgr.sh -s'")
+    , ((modm .|. shiftMask, xK_e), spawn "xterm -e 'sudo ~/bin/wifi-mgr.sh -e'")
     , ((modm, xK_Home), spawn "thunar")
     , ((modm .|. shiftMask, xK_n), spawn "quodlibet --set-rating=1.0; xterm -e '~/bin/quodlibet-lastfm-love'")
     , ((modm .|. shiftMask, xK_m), spawn "quodlibet --random=album; quodlibet --next; ~/bin/quodlibet-now-playing")
     , ((modm, xK_m), spawn "quodlibet --next; ~/bin/quodlibet-now-playing")
     , ((modm, xK_n), spawn "~/bin/quodlibet-now-playing")
     , ((modm, xK_v), spawn "sudo service bluetooth restart")
-    , ((modm .|. shiftMask, xK_o), spawn "~/bin/extrld")
+    , ((modm .|. shiftMask, xK_o), spawn "xterm -e '~/bin/display-mgr.sh'")
     , ((modm .|. shiftMask, xK_b), spawn "~/bin/bg")
-    , ((modm, xK_o), spawn "~/bin/single")
-    , ((noModMask, xF86XK_AudioLowerVolume), spawn "amixer -D pulse sset Master on && amixer -D pulse sset Master 5%- && ogg123 ~/Sounds/volume.ogg")
-    , ((noModMask, xF86XK_AudioRaiseVolume), spawn "amixer -D pulse sset Master on && amixer -D pulse sset Master 5%+ && ogg123 ~/Sounds/volume.ogg")
-    , ((noModMask, xF86XK_AudioMute), spawn "amixer -D pulse sset Master toggle")
+    , ((modm, xK_o), spawn "xterm -e '~/bin/display-mgr.sh -a'")
+    , ((noModMask, xF86XK_AudioLowerVolume), spawn "amixer sset Master on && amixer sset Master 5%- && ogg123 ~/Sounds/volume.ogg")
+    , ((noModMask, xF86XK_AudioRaiseVolume), spawn "amixer sset Master on && amixer sset Master 5%+ && ogg123 ~/Sounds/volume.ogg")
+    , ((noModMask, xF86XK_AudioMute), spawn "amixer sset Master toggle")
     , ((noModMask, xF86XK_AudioPlay), spawn "quodlibet --play-pause")
+    , ((noModMask, xF86XK_AudioNext), spawn "quodlibet --next")
+    , ((noModMask, xF86XK_AudioPrev), spawn "quodlibet --previous")
     , ((modm, xK_grave), spawn "quodlibet --toggle-window")
     , ((modm .|. shiftMask, xK_grave), spawn "quodlibet")
     , ((noModMask, xF86XK_MonBrightnessUp), spawn "~/bin/brightness-up")
     , ((noModMask, xF86XK_MonBrightnessDown), spawn "~/bin/brightness-down")
     , ((mod1Mask, xK_Tab), windows W.focusDown)
     , ((mod1Mask .|. shiftMask, xK_Tab), windows W.focusUp)
-    , ((modm, xK_s), spawn "xfce4-screenshooter -c -d 5 -m -r -s /tmp")
-    , ((modm, xK_x), spawn "~/bin/Xperia-mount")
-    , ((modm .|. shiftMask, xK_x), spawn "~/bin/Xperia-umount")
+    , ((modm, xK_s), spawn "~/bin/screenshot")
+    , ((modm, xK_x), spawn "xterm -e '~/bin/encrypted-usb-mount-sda'")
+    , ((modm .|. shiftMask, xK_x), spawn "xterm -e '~/bin/encrypted-usb-umount'")
     ]
 
-main = xmonad $ docks $ ewmh defaultConfig
+baergajPP = def { ppCurrent = xmobarColor "white" "" . wrap "[" "]"
+               , ppTitle   = xmobarColor "green" "" . shorten 40
+               , ppVisible = wrap "(" ")"
+               , ppUrgent  = xmobarColor "red" "yellow"
+               }
+
+main = xmonad $ docks $ ewmh def
   { modMask = mod4Mask
-  , terminal = "xfce4-terminal"
+  , terminal = "konsole"
   , keys     = \c -> myKeys c `M.union` keys desktopConfig c
-  , logHook = dynamicLogString sjanssenPP >>= xmonadPropLog -- current desktop/window info in xmobar
+  , logHook = dynamicLogString baergajPP >>= xmonadPropLog -- current desktop/window info in xmobar
   , layoutHook = avoidStruts(myLayout)  -- windows don't overlap xmobar
   , startupHook = do
     startupHook desktopConfig
-    spawn "single"
+    spawn "display-mgr.sh -s"
     spawn "desktop-utilities"
   }

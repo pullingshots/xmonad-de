@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo cryptsetup luksOpen /dev/sda1 foobar
+sudo mkdir -p /media/foobar
+sudo mount /dev/mapper/foobar /media/foobar

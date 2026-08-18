@@ -1,19 +1,20 @@
-Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
+Config { font = "Terminus 12"
        , bgColor = "black"
        , fgColor = "grey"
        , position = TopW L 100
        , lowerOnStart = True
-       , commands = [ Run Weather "EGPF" ["-t","<station>: <tempC>C","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 36000
-                    , Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
-                    , Run Network "wlp0s20f3" ["-L","0","-H","32","--normal","green","--high","red"] 10
+       , commands = [ Run Weather "CYYC" ["-t","Wind: <windKnots> <windCardinal> <tempC>C","-L","-10","-H","25","--normal","green","--high","red","--low","lightblue"] 600
+                    , Run DynNetwork ["-L","0","-H","32","--normal","green","--high","red"] 10
                     , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run BatteryP ["BAT1"] ["-t", "<acstatus><watts> (<left>%)", "-L", "10", "-H", "20", "-l", "red", "-h", "green", "-p", "3", "--", "-O", "<fc=green>On</fc> - ", "-l", "green", "-m", "blue", "-h", "red"] 60
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run DiskIO [("/", "IO: <total>")] [] 10
                     , Run Swap [] 10
                     , Run Com "uname" ["-s","-r"] "" 36000
-    		            , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+    		    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     , Run XMonadLog
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%XMonadLog% }{%cpu% | %memory% * %swap% | %eth0% %wlp0s20f3%       <fc=#ee9a00>%date%</fc>"
+       , template = "%XMonadLog% }{%battery% | %cpu% | %memory% * %swap% | %diskio% | %dynnetwork%   %CYYC%    <fc=#ee9a00>%date%</fc>"
        }

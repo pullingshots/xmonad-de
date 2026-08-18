@@ -1,0 +1,14 @@
+#!/bin/bash
+
+PROFILE_BASE="$HOME/Profiles/chromium"
+CHROMIUM_BIN="$HOME/chromium/latest/chrome"
+
+if [ -z "$1" ]; then
+    $CHROMIUM_BIN --incognito
+else
+    PROFILE_PATH="$PROFILE_BASE/$1"
+
+    $CHROMIUM_BIN \
+        --user-data-dir="$PROFILE_PATH" \
+        --disable-features=NTPModules
+fi

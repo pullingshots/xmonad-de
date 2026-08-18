@@ -1,0 +1,33 @@
+#!/bin/bash
+
+PROFILE_BASE="$HOME/Profiles/firefox"
+
+if [ -z "$1" ]; then
+    $HOME/firefox/firefox --private-window
+else
+    PROFILE_PATH="$PROFILE_BASE/$1"
+
+    if [ ! -d "$PROFILE_PATH" ]; then
+        echo "Profile '$1' not found. Creating directory at $PROFILE_PATH..."
+        mkdir -p "$PROFILE_PATH"
+    fi
+
+    cat <<EOF > "$PROFILE_PATH/user.js"
+user_pref("browser.newtabpage.enabled", false);
+user_pref("browser.startup.page", 0);
+user_pref("browser.home.display_top_sites", false);
+user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+user_pref("browser.sessionstore.resume_from_crash", true);
+EOF
+
+    mkdir -p "$PROFILE_PATH/chrome"
+    cat <<EOF > "$PROFILE_PATH/chrome/userChrome.css"
+/* Hide the Activity Stream/New Tab page content */
+#newtab-urlbar, #newtab-content {
+    display: none !important;
+}
+EOF
+
+    $HOME/firefox/firefox --profile "$PROFILE_PATH"
+fi
