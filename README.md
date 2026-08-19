@@ -23,6 +23,7 @@ sudo apt install \
   vorbis-tools imagemagick feh maim xclip \
   xterm thunar konsole i3lock \
   cryptsetup curl jq bc gping \
+  gnupg openssh-client \
   perl
 ```
 
@@ -36,6 +37,7 @@ sudo apt install \
 - `maim` + `xclip` — screenshots to file and clipboard
 - `cryptsetup` — encrypted USB helper
 - `jq`, `curl`, `bc`, `gping` — used by the display/network scripts
+- `gnupg`, `openssh-client` — used by the encrypted backup script
 
 ## Installation 🧱
 
@@ -52,6 +54,8 @@ cp -r Sounds ~
 Then log out, choose the **XMonad** session, and log back in.
 
 > Tip: read through the scripts before running them. Several are personalized for specific usernames, monitor names, WiFi interfaces, backlight devices, or mount points.
+>
+> Backup note: `bin/backup` expects a private `bin/.env` file. Do not commit that file because it contains your backup passphrase and destination.
 
 ## Keyboard shortcuts 🎹
 
@@ -333,6 +337,57 @@ encrypted-usb-umount
 
 Tip: confirm the device name first with `lsblk`. Mounting the wrong disk is not a fun side quest.
 
+## Backups 💾🔐
+
+### `bin/backup`
+
+Creates an encrypted backup archive of `$HOME`, excluding large/cache-heavy directories, then copies it to a configured remote location.
+
+It creates:
+
+```bash
+/tmp/backup.tar.bz2.gpg
+```
+
+The script expects a private environment file next to the script:
+
+```bash
+~/bin/.env
+```
+
+Example:
+
+```bash
+BACKUP_PASSPHRASE='change-me'
+BACKUP_LOCATION='user@example.com:/path/to/backups/'
+```
+
+Run:
+
+```bash
+backup
+```
+
+What it does:
+
+1. loads `BACKUP_PASSPHRASE` and `BACKUP_LOCATION` from `~/bin/.env`
+2. creates a compressed tar backup of `$HOME`
+3. excludes browser caches, downloads, repositories’ git objects, local app caches, games, and other bulky/generated files
+4. encrypts the archive with `gpg -c`
+5. uploads it with `scp`
+
+Requires:
+
+- `gnupg`
+- `openssh-client`
+
+Tips:
+
+- Keep `~/bin/.env` private and out of git.
+- Make sure SSH access to `BACKUP_LOCATION` works before running the backup.
+- Review the exclude list in `bin/backup` before relying on it.
+- The script removes any existing `/tmp/backup.tar.bz2.gpg` before creating a new backup.
+
 ## App updater 🦊📬
 
 ### `bin/update-mozilla.sh`
@@ -431,6 +486,7 @@ Before daily driving this setup, check these values:
 - backlight device names in brightness scripts
 - WiFi/Ethernet interface names if using legacy network scripts
 - encrypted USB device name before mounting
+- backup destination and passphrase in `~/bin/.env` for `bin/backup`
 - Last.fm credentials if using the love-track helper
 - weather station in `.xmobarrc`
 - terminal/file manager in `.xmonad/xmonad.hs`

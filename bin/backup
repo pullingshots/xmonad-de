@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Load variables from .env file
+# This looks for the .env file in the same directory as the script
+SCRIPT_DIR=$(dirname "$0")
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+else
+  echo "Error: .env file not found."
+  exit 1
+fi
+
+# Ensure the passphrase is set
+if [ -z "$BACKUP_PASSPHRASE" ]; then
+  echo "Error: BACKUP_PASSPHRASE not defined in .env file."
+  exit 1
+fi
+if [ -z "$BACKUP_LOCATION" ]; then
+  echo "Error: BACKUP_LOCATION not defined in .env file."
+  exit 1
+fi
+
+rm /tmp/backup.tar.bz2.gpg
+
+tar -cjvpf - \
+  --exclude=$HOME/chromium/* \
+  --exclude=$HOME/Profiles/chromium/*/*Cache/* \
+  --exclude=$HOME/Profiles/chromium/*/*cache/* \
+  --exclude=$HOME/Profiles/chromium/*/*/CacheStorage/* \
+  --exclude=$HOME/Profiles/chromium/*/*/CacheStorage/* \
+  --exclude=$HOME/Profiles/chromium/*/Extensions/* \
+  --exclude=$HOME/SOLE/* \
+  --exclude=$HOME/hedgie/* \
+  --exclude=$HOME/thunderbird/* \
+  --exclude=$HOME/Profiles/thunderbird/*/Mail/* \
+  --exclude=$HOME/Profiles/thunderbird/*/ImapMail/* \
+  --exclude=$HOME/.minecraft/* \
+  --exclude=$HOME/.cache/* \
+  --exclude=$HOME/.nvm/* \
+  --exclude=$HOME/.cpanm/* \
+  --exclude=$HOME/.plenv/* \
+  --exclude=$HOME/.local/share/Steam/* \
+  --exclude=$HOME/.local/share/Trash/* \
+  --exclude=$HOME/.config/Beeper/* \
+  --exclude=$HOME/.cabal/* \
+  --exclude=$HOME/Downloads/* \
+  --exclude=$HOME/repos/*/.git/objects/* \
+  --exclude=$HOME/repos/Shipment/.build/* \
+  --exclude=$HOME/firefox/* \
+  --exclude=$HOME/Profiles/firefox/*/storage/* \
+  --exclude=$HOME/Profiles/firefox/*/cache2/* \
+  --exclude=$HOME/bin/beeper \
+  --exclude=$HOME/bin/electrum \
+  --exclude=$HOME/bin/linphone \
+  $HOME \
+  | gpg -c --passphrase "$BACKUP_PASSPHRASE" --batch -o /tmp/backup.tar.bz2.gpg
+
+scp /tmp/backup.tar.bz2.gpg $BACKUP_LOCATION
