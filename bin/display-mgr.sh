@@ -112,7 +112,7 @@ restart_ui() {
     nohup xmobar >/dev/null 2>&1 & 
     if [ "$NUM_MONITORS" -gt 1 ]; then
         nohup xmobar "$HOME/.xmobarrc-secondary" -x 1 >/dev/null 2>&1 &
-        nohup trayer --edge top --align right --width 10 --height 14 --monitor 1 >/dev/null 2>&1 &
+	nohup trayer --edge top --align right --width 10 --height 14 --monitor $((NUM_MONITORS - 1)) >/dev/null 2>&1 &
     else
         nohup trayer --edge top --align right --width 10 --height 14 >/dev/null 2>&1 &
     fi
